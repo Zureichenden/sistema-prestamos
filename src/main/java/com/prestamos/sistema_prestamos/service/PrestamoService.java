@@ -28,6 +28,9 @@ public class PrestamoService {
 
     @Transactional
     public Prestamo crear(PrestamoRequestDTO dto) {
+        if (dto.getContratoPdf() == null || dto.getContratoPdf().isBlank())
+            throw new RuntimeException("Debes subir el contrato firmado antes de guardar el préstamo");
+
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
@@ -37,14 +40,14 @@ public class PrestamoService {
                 .tasaInteres(dto.getTasaInteres())
                 .numPagos(dto.getNumPagos())
                 .fechaInicio(dto.getFechaInicio())
+                .contratoPdf(dto.getContratoPdf())
+                .contratoSubido(true)
                 .build();
-
-
 
         Prestamo guardado = prestamoRepository.save(prestamo);
         generarAmortizaciones(guardado);
         bitacoraService.registrar("CREAR", "PRESTAMO", guardado.getId(),
-                "Préstamo creado: $" + dto.getMonto() + " a " + dto.getNumPagos() + " pagos");
+                "Préstamo creado con contrato: " + dto.getContratoPdf());
         return guardado;
     }
 

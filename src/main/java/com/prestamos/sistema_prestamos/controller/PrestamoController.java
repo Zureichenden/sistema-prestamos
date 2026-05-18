@@ -4,22 +4,21 @@ import com.prestamos.sistema_prestamos.dto.PagoResponseDTO;
 import com.prestamos.sistema_prestamos.dto.PrestamoRequestDTO;
 import com.prestamos.sistema_prestamos.entity.Amortizacion;
 import com.prestamos.sistema_prestamos.entity.Prestamo;
-import com.prestamos.sistema_prestamos.service.ExcelService;
-import com.prestamos.sistema_prestamos.service.PdfService;
-import com.prestamos.sistema_prestamos.service.PrestamoService;
+import com.prestamos.sistema_prestamos.service.*;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.prestamos.sistema_prestamos.dto.PagoRequestDTO;
 import com.prestamos.sistema_prestamos.dto.PagoResponseDTO;
-import com.prestamos.sistema_prestamos.service.PagoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -31,6 +30,9 @@ public class PrestamoController {
     private final PrestamoService prestamoService;
     private final PdfService pdfService;
     private final ExcelService excelService;
+    private final SolicitudPdfService solicitudPdfService;
+    private final ArchivoService archivoService;
+
 
     @PostMapping
     public ResponseEntity<Prestamo> crear(@Valid @RequestBody PrestamoRequestDTO dto) {
@@ -83,6 +85,35 @@ public class PrestamoController {
                 .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(excel);
     }
+
+    // Generar PDF de solicitud antes de guardar
+    @PostMapping("/solicitud/preview")
+    public ResponseEntity<byte[]> previewSolicitud(@Valid @RequestBody PrestamoRequestDTO dto) {
+        byte[] pdf = solicitudPdfService.generarSolicitud(dto);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=solicitud-prestamo.pdf")
+                .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+    // Subir PDF firmado
+    @PostMapping("/contrato/subir")
+    public ResponseEntity<Map<String, String>> subirContrato(
+            @RequestParam("archivo") MultipartFile archivo) {
+        String nombreArchivo = archivoService.guardarPdf(archivo);
+        return ResponseEntity.ok(Map.of("nombreArchivo", nombreArchivo));
+    }
+
+    // Descargar contrato
+    @GetMapping("/contrato/{nombreArchivo}")
+    public ResponseEntity<byte[]> descargarContrato(@PathVariable String nombreArchivo) {
+        byte[] pdf = archivoService.obtenerPdf(nombreArchivo);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "inline; filename=" + nombreArchivo)
+                .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
 
 
 

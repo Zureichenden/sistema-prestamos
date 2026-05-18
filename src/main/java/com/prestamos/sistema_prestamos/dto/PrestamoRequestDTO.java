@@ -13,6 +13,7 @@ public class PrestamoRequestDTO {
 
     @NotNull(message = "El cliente es obligatorio")
     private Long clienteId;
+    private String contratoPdf;
 
     @NotNull(message = "El monto es obligatorio")
     @DecimalMin(value = "1000.00", message = "El monto mínimo es $1,000")

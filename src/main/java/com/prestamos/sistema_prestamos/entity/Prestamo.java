@@ -38,6 +38,12 @@ public class Prestamo {
     @Column(nullable = false)
     private EstatusPrestamo estatus;
 
+    @Column(name = "contrato_pdf")
+    private String contratoPdf;
+
+    @Column(name = "contrato_subido")
+    private boolean contratoSubido;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

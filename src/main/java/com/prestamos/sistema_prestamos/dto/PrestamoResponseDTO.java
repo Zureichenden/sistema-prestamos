@@ -19,4 +19,6 @@ public class PrestamoResponseDTO {
     private LocalDate fechaInicio;
     private String estatus;
     private LocalDateTime createdAt;
+    private String contratoPdf;
+    private boolean contratoSubido;
 }
