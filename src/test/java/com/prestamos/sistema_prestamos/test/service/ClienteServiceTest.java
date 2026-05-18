@@ -9,6 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -88,13 +91,14 @@ class ClienteServiceTest {
 
     @Test
     void listar_retornaListaDeClientes() {
-        when(clienteRepository.findAll()).thenReturn(List.of(cliente));
+        Page<Cliente> page = new PageImpl<>(List.of(cliente));
+        when(clienteRepository.findAll(any(Pageable.class))).thenReturn(page);
 
-        List<ClienteDTO> resultado = clienteService.listar();
+        Page<ClienteDTO> resultado = clienteService.listar(0, 10);
 
         assertFalse(resultado.isEmpty());
-        assertEquals(1, resultado.size());
-        assertEquals("Juan", resultado.get(0).getNombre());
+        assertEquals(1, resultado.getTotalElements());
+        assertEquals("Juan", resultado.getContent().get(0).getNombre());
     }
 
     @Test

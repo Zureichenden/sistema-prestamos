@@ -1,34 +1,33 @@
 package com.prestamos.sistema_prestamos.security;
 
-import org.springframework.context.annotation.Bean;
+import com.prestamos.sistema_prestamos.entity.Usuario;
+import com.prestamos.sistema_prestamos.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final InMemoryUserDetailsManager manager;
-
-    public UserDetailsServiceImpl(PasswordEncoder encoder) {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(encoder.encode("admin123"))
-                .roles("ADMIN")
-                .build();
-
-        UserDetails user = User.builder()
-                .username("usuario")
-                .password(encoder.encode("user123"))
-                .roles("USER")
-                .build();
-
-        this.manager = new InMemoryUserDetailsManager(admin, user);
-    }
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return manager.loadUserByUsername(username);
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
+
+        if (!usuario.isActivo())
+            throw new UsernameNotFoundException("Usuario inactivo: " + username);
+
+        return User.builder()
+                .username(usuario.getUsername())
+                .password(usuario.getPassword())
+                .authorities(usuario.getRoles().stream()
+                        .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getNombre()))
+                        .collect(Collectors.toList()))
+                .build();
     }
 }
