@@ -20,5 +20,5 @@ public class PrestamoResponseDTO {
     private String estatus;
     private LocalDateTime createdAt;
     private String contratoPdf;
-    private boolean contratoSubido;
+    private Boolean contratoSubido;
 }

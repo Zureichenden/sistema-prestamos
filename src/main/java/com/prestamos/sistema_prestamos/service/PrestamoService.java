@@ -41,7 +41,7 @@ public class PrestamoService {
                 .numPagos(dto.getNumPagos())
                 .fechaInicio(dto.getFechaInicio())
                 .contratoPdf(dto.getContratoPdf())
-                .contratoSubido(true)
+                .contratoSubido(dto.getContratoPdf() != null && !dto.getContratoPdf().isBlank())
                 .build();
 
         Prestamo guardado = prestamoRepository.save(prestamo);

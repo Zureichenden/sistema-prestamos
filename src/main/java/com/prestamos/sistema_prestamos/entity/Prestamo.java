@@ -42,7 +42,7 @@ public class Prestamo {
     private String contratoPdf;
 
     @Column(name = "contrato_subido")
-    private boolean contratoSubido;
+    private Boolean contratoSubido;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
