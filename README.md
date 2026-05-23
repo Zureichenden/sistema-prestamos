@@ -1,4 +1,4 @@
-Está casi bien, solo necesita actualizarse con todo lo nuevo que agregamos. Aquí el README completo y actualizado:
+Aquí está el `README.md` completo y actualizado:
 
 ```markdown
 # 🏦 Sistema de Préstamos
@@ -61,13 +61,13 @@ cd sistema-prestamos
 CREATE DATABASE sistema_prestamos;
 ```
 
-3. Copia el archivo de ejemplo y configura tus variables:
+3. Copia el archivo de ejemplo:
 ```bash
-cp application.properties.example src/main/resources/application.properties
+cp src/main/resources/application.properties.example src/main/resources/application.properties
 ```
 
-4. Crea el archivo `.env` en la raíz del proyecto:
-```
+4. Crea el archivo `src/main/resources/application-local.properties`:
+```properties
 DB_URL=jdbc:postgresql://localhost:5432/sistema_prestamos
 DB_USERNAME=postgres
 DB_PASSWORD=tu_password
@@ -77,6 +77,7 @@ MAIL_USERNAME=tu_correo@gmail.com
 MAIL_PASSWORD=tu_app_password_gmail
 UPLOAD_DIR=uploads/contratos
 ```
+> ⚠️ Este archivo está en `.gitignore` y nunca debe subirse al repositorio.
 
 5. Ejecuta el proyecto:
 ```bash
@@ -152,24 +153,27 @@ src/
 │   │   ├── security/        ← JWT y Spring Security
 │   │   └── service/         ← Lógica de negocio
 │   └── resources/
-│       └── application.properties
+│       ├── application.properties          ← Configuración general
+│       ├── application.properties.example  ← Ejemplo sin credenciales
+│       └── application-local.properties    ← Credenciales locales (ignorado por git)
 └── test/
     └── java/                ← Pruebas unitarias
 ```
 
 ## Notas de seguridad
-- Nunca subas el archivo `.env` ni `application.properties` con credenciales reales al repositorio
-- El archivo `.gitignore` ya está configurado para ignorarlos
+- Nunca subas `application-local.properties` con credenciales reales al repositorio
+- El archivo `.gitignore` ya está configurado para ignorarlo
 - Genera un App Password específico en Gmail para el envío de correos
 - Usa una clave JWT de mínimo 256 bits
+- El perfil `local` se activa automáticamente con `spring.profiles.active=local`
 ```
 
-Cópialo y reemplaza tu `README.md` actual. Luego haz commit:
+Haz commit:
 
 ```bash
 git add README.md
-git commit -m "docs: actualizar README con modulos y variables de entorno"
+git commit -m "docs: actualizar README con configuracion de perfil local"
 git push
 ```
 
-😊
+¿Arrancó Spring Boot sin errores? 😊
