@@ -1,8 +1,13 @@
+Está casi bien, solo necesita actualizarse con todo lo nuevo que agregamos. Aquí el README completo y actualizado:
+
+```markdown
 # 🏦 Sistema de Préstamos
 
-API REST desarrollada con Spring Boot para gestión de préstamos financieros.
+API REST desarrollada con Spring Boot para gestión de préstamos financieros con frontend en React.
 
 ## Tecnologías
+
+### Backend
 - Java 17
 - Spring Boot 4.x
 - Spring Security + JWT
@@ -11,16 +16,29 @@ API REST desarrollada con Spring Boot para gestión de préstamos financieros.
 - Lombok
 - Swagger UI
 - JUnit 5 + Mockito
+- iTextPDF
+- Apache POI (Excel)
+- JavaMailSender
+
+### Frontend
+- React 18
+- React Router DOM
+- Axios
+- CSS Modules
 
 ## Módulos
-- ✅ Clientes
-- ✅ Préstamos con cálculo de amortizaciones
-- ✅ Pagos
-- ✅ Bitácora
+- ✅ Autenticación con JWT
+- ✅ Gestión de usuarios y roles (ADMIN, GESTOR, AUDITOR, VIEWER)
+- ✅ Clientes con email de bienvenida
+- ✅ Préstamos con cálculo automático de amortizaciones
+- ✅ Flujo de contrato: generación de PDF → firma → subida → registro
+- ✅ Email de confirmación de préstamo con PDF adjunto
+- ✅ Pagos con email de confirmación
+- ✅ Exportar tabla de amortización a PDF y Excel
+- ✅ Bitácora de acciones del sistema
 - ✅ Reportes por rango de fechas
-- ✅ Exportar a PDF y Excel
-- ✅ Email de bienvenida
-- ✅ Pruebas unitarias
+- ✅ Paginación en todos los módulos
+- ✅ Pruebas unitarias con JUnit 5 + Mockito
 
 ## Instalación
 
@@ -28,30 +46,130 @@ API REST desarrollada con Spring Boot para gestión de préstamos financieros.
 - Java 17+
 - PostgreSQL
 - Maven
+- Node.js 18+
 
-### Configuración
-1. Crear base de datos:
+### Backend
+
+1. Clona el repositorio:
+```bash
+git clone https://github.com/TU_USUARIO/sistema-prestamos.git
+cd sistema-prestamos
+```
+
+2. Crea la base de datos:
 ```sql
 CREATE DATABASE sistema_prestamos;
 ```
 
-2. Configurar `application.properties`:
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/sistema_prestamos
-spring.datasource.username=postgres
-spring.datasource.password=TU_PASSWORD
-jwt.secret=TU_CLAVE_SECRETA
+3. Copia el archivo de ejemplo y configura tus variables:
+```bash
+cp application.properties.example src/main/resources/application.properties
 ```
 
-3. Ejecutar:
+4. Crea el archivo `.env` en la raíz del proyecto:
+```
+DB_URL=jdbc:postgresql://localhost:5432/sistema_prestamos
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password
+JWT_SECRET=tu_clave_secreta_minimo_256_bits
+JWT_EXPIRATION=86400000
+MAIL_USERNAME=tu_correo@gmail.com
+MAIL_PASSWORD=tu_app_password_gmail
+UPLOAD_DIR=uploads/contratos
+```
+
+5. Ejecuta el proyecto:
 ```bash
 mvn spring-boot:run
 ```
 
-4. Swagger UI disponible en: http://localhost:8080/swagger-ui/index.html
+6. Swagger UI disponible en:
+```
+http://localhost:8080/swagger-ui/index.html
+```
 
-## Credenciales por defecto
+### Frontend
+
+1. Clona el repositorio del frontend:
+```bash
+git clone https://github.com/TU_USUARIO/sistema-prestamos-frontend.git
+cd sistema-prestamos-frontend
+```
+
+2. Instala dependencias:
+```bash
+npm install
+```
+
+3. Ejecuta:
+```bash
+npm start
+```
+
+4. Abre en el navegador:
+```
+http://localhost:3000
+```
+
+## Usuarios por defecto
+
 | Usuario | Contraseña | Rol |
-|---------|-----------|-----|
+|---------|------------|-----|
 | admin | admin123 | ADMIN |
-| usuario | user123 | USER |
+
+## Roles del sistema
+
+| Rol | Clientes | Préstamos | Pagos | Reportes | Bitácora | Config |
+|-----|----------|-----------|-------|----------|----------|--------|
+| ADMIN | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| GESTOR | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| AUDITOR | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| VIEWER | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+
+## Flujo de préstamo
+
+```
+1. Registrar cliente → recibe email de bienvenida
+2. Llenar datos del préstamo
+3. Generar PDF de solicitud con tabla de amortización y sección de firmas
+4. Cliente firma el PDF físicamente
+5. Subir PDF firmado al sistema
+6. Confirmar y guardar préstamo → cliente recibe email con PDF adjunto
+7. Registrar pagos → cliente recibe email de confirmación por cada pago
+```
+
+## Estructura del proyecto
+
+```
+src/
+├── main/
+│   ├── java/com/prestamos/sistema_prestamos/
+│   │   ├── config/          ← Inicialización de datos
+│   │   ├── controller/      ← Endpoints REST
+│   │   ├── dto/             ← Objetos de transferencia
+│   │   ├── entity/          ← Modelos de base de datos
+│   │   ├── repository/      ← Acceso a datos JPA
+│   │   ├── security/        ← JWT y Spring Security
+│   │   └── service/         ← Lógica de negocio
+│   └── resources/
+│       └── application.properties
+└── test/
+    └── java/                ← Pruebas unitarias
+```
+
+## Notas de seguridad
+- Nunca subas el archivo `.env` ni `application.properties` con credenciales reales al repositorio
+- El archivo `.gitignore` ya está configurado para ignorarlos
+- Genera un App Password específico en Gmail para el envío de correos
+- Usa una clave JWT de mínimo 256 bits
+```
+
+Cópialo y reemplaza tu `README.md` actual. Luego haz commit:
+
+```bash
+git add README.md
+git commit -m "docs: actualizar README con modulos y variables de entorno"
+git push
+```
+
+😊
