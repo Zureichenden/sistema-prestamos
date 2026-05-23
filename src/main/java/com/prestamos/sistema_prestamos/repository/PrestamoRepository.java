@@ -14,5 +14,5 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     List<Prestamo> findByEstatus(Prestamo.EstatusPrestamo estatus);
     Page<Prestamo> findByClienteId(Long clienteId, Pageable pageable);
     Page<Prestamo> findByCreatedAtBetween(LocalDateTime inicio, LocalDateTime fin, Pageable pageable);
-
+    List<Prestamo> findByCreatedAtBetween(LocalDateTime inicio, LocalDateTime fin);
 }

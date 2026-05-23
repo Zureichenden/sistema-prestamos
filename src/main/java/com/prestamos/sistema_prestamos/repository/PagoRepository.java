@@ -15,5 +15,5 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     boolean existsByAmortizacionId(Long amortizacionId);
     Page<Pago> findByPrestamoId(Long prestamoId, Pageable pageable);
     Page<Pago> findByFechaPagoBetween(LocalDate inicio, LocalDate fin, Pageable pageable);
-
+    List<Pago> findByFechaPagoBetween(LocalDate inicio, LocalDate fin);
 }
