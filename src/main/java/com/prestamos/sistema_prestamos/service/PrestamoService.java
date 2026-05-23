@@ -25,6 +25,7 @@ public class PrestamoService {
     private final ClienteRepository clienteRepository;
     private final AmortizacionRepository amortizacionRepository;
     private final BitacoraService bitacoraService;
+    private final EmailService emailService;
 
     @Transactional
     public Prestamo crear(PrestamoRequestDTO dto) {
@@ -46,17 +47,24 @@ public class PrestamoService {
 
         Prestamo guardado = prestamoRepository.save(prestamo);
         generarAmortizaciones(guardado);
+
+        // Enviar email con PDF adjunto
+        emailService.enviarConfirmacionPrestamo(
+                cliente.getEmail(),
+                cliente.getNombre(),
+                dto.getMonto(),
+                dto.getNumPagos(),
+                dto.getTasaInteres(),
+                dto.getContratoPdf()
+        );
+
         bitacoraService.registrar("CREAR", "PRESTAMO", guardado.getId(),
                 "Préstamo creado con contrato: " + dto.getContratoPdf());
+
         return guardado;
     }
 
-    /*
-    public List<Prestamo> listarPorCliente(Long clienteId) {
-        return prestamoRepository.findByClienteId(clienteId);
-    }
 
-     */
 
     public Page<Prestamo> listarPorCliente(Long clienteId, int pagina, int tamanio) {
         Pageable pageable = PageRequest.of(pagina, tamanio, Sort.by("id").descending());

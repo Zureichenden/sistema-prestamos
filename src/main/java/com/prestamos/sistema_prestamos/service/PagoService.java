@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +20,7 @@ public class PagoService {
     private final PrestamoRepository prestamoRepository;
     private final AmortizacionRepository amortizacionRepository;
     private final BitacoraService bitacoraService;
+    private final EmailService emailService;
 
     @Transactional
     public PagoResponseDTO registrarPago(PagoRequestDTO dto) {
@@ -60,10 +59,7 @@ public class PagoService {
                 .observaciones(dto.getObservaciones())
                 .build();
 
-
         pagoRepository.save(pago);
-        bitacoraService.registrar("CREAR", "PAGO", pago.getId(),
-                "Pago registrado: $" + dto.getMontoPagado() + " para préstamo #" + dto.getPrestamoId());
 
         // Marcar amortización como pagada (si no es parcial)
         if (tipoPago != Pago.TipoPago.PARCIAL) {
@@ -83,26 +79,27 @@ public class PagoService {
             prestamoRepository.save(prestamo);
         }
 
+        // Enviar email de confirmación de pago
+        emailService.enviarConfirmacionPago(
+                prestamo.getCliente().getEmail(),
+                prestamo.getCliente().getNombre(),
+                dto.getMontoPagado(),
+                amortizacion.getNumPago(),
+                amortizacion.getSaldoRestante(),
+                dto.getFechaPago()
+        );
+
+        bitacoraService.registrar("CREAR", "PAGO", pago.getId(),
+                "Pago registrado: $" + dto.getMontoPagado() + " para préstamo #" + dto.getPrestamoId());
+
         return toDTO(pago, amortizacion);
     }
-
-    /*
-    public List<PagoResponseDTO> listarPorPrestamo(Long prestamoId) {
-        return pagoRepository.findByPrestamoId(prestamoId)
-                .stream()
-                .map(p -> toDTO(p, p.getAmortizacion()))
-                .collect(Collectors.toList());
-    }
-
-     */
 
     public Page<PagoResponseDTO> listarPorPrestamo(Long prestamoId, int pagina, int tamanio) {
         Pageable pageable = PageRequest.of(pagina, tamanio, Sort.by("id").descending());
         return pagoRepository.findByPrestamoId(prestamoId, pageable)
                 .map(p -> toDTO(p, p.getAmortizacion()));
     }
-
-
 
     private PagoResponseDTO toDTO(Pago pago, Amortizacion amortizacion) {
         return PagoResponseDTO.builder()
