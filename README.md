@@ -166,14 +166,4 @@ src/
 - Genera un App Password específico en Gmail para el envío de correos
 - Usa una clave JWT de mínimo 256 bits
 - El perfil `local` se activa automáticamente con `spring.profiles.active=local`
-```
 
-Haz commit:
-
-```bash
-git add README.md
-git commit -m "docs: actualizar README con configuracion de perfil local"
-git push
-```
-
-¿Arrancó Spring Boot sin errores? 😊
