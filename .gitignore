@@ -1,31 +1,34 @@
-HELP.md
-
-
+# Maven
 target/
 *.class
 *.jar
 *.war
+
+# IDE
 .idea/
 *.iml
-.env
-application-prod.properties
-
-### STS ###
-.apt_generated
+*.iws
+*.ipr
+.vscode/
+.settings/
 .classpath
-.factorypath
 .project
-.settings
+.factorypath
 .springBeans
 .sts4-cache
+.apt_generated
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# Variables de entorno — NUNCA subir
+.env
+.env.*
+application-local.properties
+application-prod.properties
+application-dev.properties
 
-### NetBeans ###
+# Uploads
+uploads/
+
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -34,7 +37,3 @@ application-prod.properties
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
