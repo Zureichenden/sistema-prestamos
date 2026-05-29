@@ -2,6 +2,7 @@ package com.prestamos.sistema_prestamos.service;
 
 import com.prestamos.sistema_prestamos.dto.*;
 import com.prestamos.sistema_prestamos.entity.*;
+import com.prestamos.sistema_prestamos.exception.BusinessException;
 import com.prestamos.sistema_prestamos.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -94,4 +95,23 @@ public class UsuarioService {
                 .createdAt(u.getCreatedAt())
                 .build();
     }
+
+    @Transactional
+    public void cambiarPassword(String username, CambiarPasswordDTO dto) {
+        if (!dto.getPasswordNueva().equals(dto.getConfirmarPassword()))
+            throw new BusinessException("Las contraseñas no coinciden");
+
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(dto.getPasswordActual(), usuario.getPassword()))
+            throw new BusinessException("La contraseña actual es incorrecta");
+
+        usuario.setPassword(passwordEncoder.encode(dto.getPasswordNueva()));
+        usuarioRepository.save(usuario);
+        bitacoraService.registrar("ACTUALIZAR", "USUARIO", usuario.getId(),
+                "Contraseña actualizada para: " + username);
+    }
+
+
 }

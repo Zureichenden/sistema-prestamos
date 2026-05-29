@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -50,4 +52,14 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponseDTO> toggleActivo(@PathVariable Long id) {
         return ResponseEntity.ok(usuarioService.toggleActivo(id));
     }
+
+    @PutMapping("/cambiar-password")
+    public ResponseEntity<?> cambiarPassword(
+            @Valid @RequestBody CambiarPasswordDTO dto,
+            java.security.Principal principal) {
+        usuarioService.cambiarPassword(principal.getName(), dto);
+        return ResponseEntity.ok(Map.of("mensaje", "Contraseña actualizada correctamente"));
+    }
+
+
 }
