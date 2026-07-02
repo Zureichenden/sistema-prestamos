@@ -1,8 +1,13 @@
 package com.prestamos.sistema_prestamos.service;
 
-import com.prestamos.sistema_prestamos.dto.PrestamoRequestDTO;
-import com.prestamos.sistema_prestamos.entity.*;
-import com.prestamos.sistema_prestamos.repository.*;
+import com.prestamos.sistema_prestamos.modules.prestamos.dto.PrestamoRequestDTO;
+import com.prestamos.sistema_prestamos.modules.clientes.entity.Cliente;
+import com.prestamos.sistema_prestamos.modules.clientes.repository.ClienteRepository;
+import com.prestamos.sistema_prestamos.modules.prestamos.entity.Amortizacion;
+import com.prestamos.sistema_prestamos.modules.prestamos.entity.Prestamo;
+import com.prestamos.sistema_prestamos.modules.prestamos.repository.AmortizacionRepository;
+import com.prestamos.sistema_prestamos.modules.prestamos.repository.PrestamoRepository;
+import com.prestamos.sistema_prestamos.modules.prestamos.service.PrestamoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

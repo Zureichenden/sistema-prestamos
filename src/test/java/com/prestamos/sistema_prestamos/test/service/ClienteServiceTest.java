@@ -1,8 +1,9 @@
 package com.prestamos.sistema_prestamos.service;
 
-import com.prestamos.sistema_prestamos.dto.ClienteDTO;
-import com.prestamos.sistema_prestamos.entity.Cliente;
-import com.prestamos.sistema_prestamos.repository.ClienteRepository;
+import com.prestamos.sistema_prestamos.modules.clientes.dto.ClienteDTO;
+import com.prestamos.sistema_prestamos.modules.clientes.entity.Cliente;
+import com.prestamos.sistema_prestamos.modules.clientes.repository.ClienteRepository;
+import com.prestamos.sistema_prestamos.modules.clientes.service.ClienteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
