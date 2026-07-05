@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/roles")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+
 public class RolController {
 
     private final RolService rolService;

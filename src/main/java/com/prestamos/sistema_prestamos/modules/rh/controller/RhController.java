@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/rh")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+
 public class RhController {
 
     private final RhService rhService;

@@ -16,7 +16,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
 @RequestMapping("/api/prestamos")
 @RequiredArgsConstructor
