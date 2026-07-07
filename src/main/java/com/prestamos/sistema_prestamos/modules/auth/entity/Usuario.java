@@ -1,5 +1,7 @@
 package com.prestamos.sistema_prestamos.modules.auth.entity;
 
+import com.prestamos.sistema_prestamos.modules.empleados.entity.Empleado;
+import com.prestamos.sistema_prestamos.modules.clientes.entity.Cliente;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -31,6 +33,10 @@ public class Usuario {
 
     private boolean activo;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_usuario", nullable = false)
+    private TipoUsuario tipoUsuario;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_roles",
@@ -39,6 +45,14 @@ public class Usuario {
     )
     private Set<Rol> roles;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empleado_id")
+    private Empleado empleado;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -46,5 +60,10 @@ public class Usuario {
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.activo = true;
+        if (this.tipoUsuario == null) this.tipoUsuario = TipoUsuario.EMPLEADO;
+    }
+
+    public enum TipoUsuario {
+        EMPLEADO, CLIENTE
     }
 }

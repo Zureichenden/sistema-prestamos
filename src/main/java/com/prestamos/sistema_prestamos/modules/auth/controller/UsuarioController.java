@@ -63,5 +63,20 @@ public class UsuarioController {
         return ResponseEntity.ok(Map.of("mensaje", "Contraseña actualizada correctamente"));
     }
 
+    @PostMapping("/empleado/{empleadoId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UsuarioResponseDTO> crearParaEmpleado(
+            @PathVariable Long empleadoId,
+            @Valid @RequestBody UsuarioRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(usuarioService.crearParaEmpleado(empleadoId, dto));
+    }
+
+    @GetMapping("/empleado/{empleadoId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UsuarioResponseDTO> obtenerPorEmpleado(@PathVariable Long empleadoId) {
+        return ResponseEntity.ok(usuarioService.obtenerPorEmpleadoId(empleadoId));
+    }
+
 
 }

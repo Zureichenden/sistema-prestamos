@@ -26,4 +26,8 @@ public class UsuarioRequestDTO {
 
     @NotEmpty(message = "Debe asignar al menos un rol")
     private Set<String> roles;
+
+    private String tipoUsuario;
+    private Long empleadoId;
+    private Long clienteId;
 }

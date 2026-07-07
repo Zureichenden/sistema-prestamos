@@ -14,6 +14,10 @@ public class UsuarioResponseDTO {
     private String nombre;
     private String email;
     private boolean activo;
+    private String tipoUsuario;
     private Set<String> roles;
+    private Long empleadoId;
+    private String empleadoNombre;
+    private Long clienteId;
     private LocalDateTime createdAt;
 }
