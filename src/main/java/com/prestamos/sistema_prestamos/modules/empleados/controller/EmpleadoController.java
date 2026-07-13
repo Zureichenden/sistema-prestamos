@@ -157,4 +157,27 @@ public class EmpleadoController {
             @RequestParam(defaultValue = "10") int tamanio) {
         return ResponseEntity.ok(empleadoService.listarTodaBitacora(pagina, tamanio));
     }
+
+    @PutMapping("/direcciones/{id}")
+    public ResponseEntity<EmpleadoDireccionDTO> actualizarDireccion(
+            @PathVariable Long id,
+            @RequestBody EmpleadoDireccionDTO dto) {
+        return ResponseEntity.ok(empleadoService.actualizarDireccion(id, dto));
+    }
+
+    @PutMapping("/telefonos/{id}")
+    public ResponseEntity<EmpleadoTelefonoDTO> actualizarTelefono(
+            @PathVariable Long id,
+            @RequestBody EmpleadoTelefonoDTO dto) {
+        return ResponseEntity.ok(empleadoService.actualizarTelefono(id, dto));
+    }
+
+    @PutMapping("/beneficiarios/{id}")
+    public ResponseEntity<EmpleadoBeneficiarioDTO> actualizarBeneficiario(
+            @PathVariable Long id,
+            @RequestBody EmpleadoBeneficiarioDTO dto) {
+        return ResponseEntity.ok(empleadoService.actualizarBeneficiario(id, dto));
+    }
+
+
 }

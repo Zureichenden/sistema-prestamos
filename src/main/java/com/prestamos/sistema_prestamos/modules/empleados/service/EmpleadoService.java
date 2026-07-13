@@ -377,4 +377,45 @@ public class EmpleadoService {
                 .fechaHora(b.getFechaHora())
                 .build();
     }
+
+    @Transactional
+    public EmpleadoDireccionDTO actualizarDireccion(Long id, EmpleadoDireccionDTO dto) {
+        EmpleadoDireccion direccion = direccionRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Dirección no encontrada"));
+        direccion.setCalle(dto.getCalle());
+        direccion.setColonia(dto.getColonia());
+        direccion.setCiudad(dto.getCiudad());
+        direccion.setEstado(dto.getEstado());
+        direccion.setCodigoPostal(dto.getCodigoPostal());
+        direccion.setTipo(dto.getTipo() != null ?
+                EmpleadoDireccion.TipoDireccion.valueOf(dto.getTipo()) : null);
+        direccion.setPrincipal(dto.isPrincipal());
+        return toDireccionDTO(direccionRepository.save(direccion));
+    }
+
+    @Transactional
+    public EmpleadoTelefonoDTO actualizarTelefono(Long id, EmpleadoTelefonoDTO dto) {
+        EmpleadoTelefono telefono = telefonoRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Teléfono no encontrado"));
+        telefono.setNumero(dto.getNumero());
+        telefono.setTipo(dto.getTipo() != null ?
+                EmpleadoTelefono.TipoTelefono.valueOf(dto.getTipo()) : null);
+        telefono.setPrincipal(dto.isPrincipal());
+        return toTelefonoDTO(telefonoRepository.save(telefono));
+    }
+
+    @Transactional
+    public EmpleadoBeneficiarioDTO actualizarBeneficiario(Long id, EmpleadoBeneficiarioDTO dto) {
+        EmpleadoBeneficiario beneficiario = beneficiarioRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Beneficiario no encontrado"));
+        beneficiario.setNombre(dto.getNombre());
+        beneficiario.setApellido(dto.getApellido());
+        beneficiario.setParentesco(dto.getParentesco());
+        beneficiario.setPorcentaje(dto.getPorcentaje());
+        beneficiario.setTelefono(dto.getTelefono());
+        beneficiario.setFechaNacimiento(dto.getFechaNacimiento());
+        return toBeneficiarioDTO(beneficiarioRepository.save(beneficiario));
+    }
+
+
 }
